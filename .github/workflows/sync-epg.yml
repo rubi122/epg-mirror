@@ -2,7 +2,7 @@ name: Sync EPG (3 back / 3 forward)
 
 on:
   schedule:
-    - cron: "0 */4 * * *"   # כל 4 שעות
+    - cron: "0 */4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +20,6 @@ jobs:
         run: |
           set -e
           UA="Mozilla/5.0"
-          # ננסה שתי תבניות כתובת עד שיורד gz
           curl -L --fail -A "$UA" -o tvteam.xml.gz "http://epg.team/tvteam.3.3.xml.gz" \
           || curl -L --fail -A "$UA" -o tvteam.xml.gz "http://epg.team/tvteam.xml.3.3.gz"
           test -s tvteam.xml.gz
