@@ -16,13 +16,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download EPG (gz, 3 back / 3 forward)
+      - name: Download & compress EPG (3/3)
         run: |
           set -e
           UA="Mozilla/5.0"
-          curl -L --fail -A "$UA" -o tvteam.xml.gz "http://epg.team/tvteam.3.3.xml.gz" \
-          || curl -L --fail -A "$UA" -o tvteam.xml.gz "http://epg.team/tvteam.xml.3.3.gz"
-          test -s tvteam.xml.gz
+          # הורדה כ-XML (שתי וריאציות כתובת), ואז דחיסה ל-GZ
+          curl -L --fail -A "$UA" -o tvteam.xml "http://epg.team/tvteam.xml.3.3" \
+          || curl -L --fail -A "$UA" -o tvteam.xml "http://epg.team/tvteam.3.3.xml"
+          gzip -9 -c tvteam.xml > tvteam.xml.gz
+          rm -f tvteam.xml
 
       - name: Commit & push
         run: |
@@ -30,6 +32,6 @@ jobs:
           git config user.name "epg-bot"
           git config user.email "actions@github.com"
           git pull --rebase origin main || true
-          git add -A
+          git add tvteam.xml.gz
           git commit -m "update epg gz (3/3)" || echo "no changes"
           git push origin HEAD:main
