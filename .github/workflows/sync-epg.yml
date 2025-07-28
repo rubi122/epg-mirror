@@ -2,7 +2,7 @@ name: Sync EPG (3 back / 3 forward)
 
 on:
   schedule:
-    - cron: "0 */4 * * *"
+    - cron: "0 */4 * * *"   # כל 4 שעות
   workflow_dispatch:
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
           set -e
           git config user.name "epg-bot"
           git config user.email "actions@github.com"
+          git pull --rebase origin main || true
           git add -A
           git commit -m "update epg gz (3/3)" || echo "no changes"
-          git pull --rebase origin main || true
           git push origin HEAD:main
