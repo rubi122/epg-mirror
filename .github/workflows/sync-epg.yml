@@ -13,15 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download EPG
+
+      - name: Download EPG (3/3, compressed)
         run: |
-          curl -L --fail -A "Mozilla/5.0" -o tvteam.xml "http://epg.team/tvteam.xml.3.3"
+          set -e
+          UA="Mozilla/5.0"
+          # ננסה שתי צורות כתובת עד שזה יורד
+          curl -L --fail -A "$UA" -o tvteam.xml.gz "http://epg.team/tvteam.3.3.xml.gz" \
+          || curl -L --fail -A "$UA" -o tvteam.xml.gz "http://epg.team/tvteam.xml.3.3.gz"
+
       - name: Commit & push if changed
         run: |
           git config user.name "epg-bot"
           git config user.email "actions@github.com"
-          if [ -n "$(git status --porcelain tvteam.xml)" ]; then
-            git add tvteam.xml
-            git commit -m "update epg"
+          if [ -n "$(git status --porcelain tvteam.xml.gz)" ]; then
+            git add tvteam.xml.gz
+            git commit -m "update epg gz (3/3)"
             git push
           fi
