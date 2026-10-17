@@ -1,0 +1,25 @@
+#EXTM3U tvg-url="https://raw.githubusercontent.com/rubi122/epg-mirror/main/il.xml.gz"
+
+#EXTINF:-1 tvg-id="channel16" tvg-name="Channel 16" tvg-logo="http://hls.gd/images/chIcons/116.png", Channel 16
+https://ch16israel-cdn.encoders.immergo.tv/1/streamPlaylist.m3u8
+
+#EXTINF:-1 tvg-id="ch3134" tvg-name="Channel 10" tvg-logo="http://hls.gd/images/chIcons/3134.png", Channel 10
+https://r.il.cdn-redge.media/livehls/oil/calcala-live/live/channel10/live.livx/playlist.m3u8?renditions
+
+#EXTINF:-1 tvg-id="ch428" tvg-name="Channel 11" tvg-logo="http://hls.gd/images/chIcons/428.png", Channel 11
+https://kancdn.medonecdn.net/livehls/oil/kancdn-live/live/kan11/live.livx/playlist.m3u8?renditions&fmp4
+
+#EXTINF:-1 tvg-id="ch429" tvg-name="Channel 12" tvg-logo="http://hls.gd/images/chIcons/429.png", Channel 12
+https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12makowad/index.m3u8
+
+#EXTINF:-1 tvg-id="ch430" tvg-name="Channel 13" tvg-logo="http://hls.gd/images/chIcons/430.png", Channel 13
+https://d18b0e6mopany4.cloudfront.net/out/v1/1a7c55961dec4c72b51d79e5d9216cff/index.m3u8
+
+#EXTINF:-1 tvg-id="ch1119" tvg-name="Channel 14" tvg-logo="http://hls.gd/images/chIcons/1119.png", Channel 14
+https://n-121-4.il.cdn-redge.media/livehls/oil/ch14/live/ch14/live.livx/playlist.m3u8
+
+#EXTINF:-1 tvg-id="ch2824" tvg-name="i24 News" tvg-logo="http://hls.gd/images/chIcons/2824.png", i24 News
+https://fastly.live.brightcove.com/6386790215112/eu-central-1/5377161796001/playlist-hls.m3u8
+
+#EXTINF:-1 tvg-id="hotisraelidrama.il" tvg-name="ערוץ הדרמות הישראליות" tvg-logo="https://photo-tmdb.com/stalker_portal/misc/logos/320/6038.jpg?36879", ערוץ הדרמות הישראליות
+http://buyzone26.me/live/1b624b2214/9ba48b907d/1874233.m3u8
