@@ -1,0 +1,56 @@
+name: Sync corrected EPG (il.xml.gz)
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"   # every 4 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Build il.xml.gz (tvteam, name-corrected)
+        run: |
+          set -e
+          UA="Mozilla/5.0"
+          curl -L --fail -A "$UA" -o tvteam.xml "http://epg.team/tvteam.xml.3.3" \
+          || curl -L --fail -A "$UA" -o tvteam.xml "http://epg.team/tvteam.xml.3.2" \
+          || curl -L --fail -A "$UA" -o tvteam.xml "http://epg.team/tvteam.xml.3.1"
+          python3 transform.py tvteam.xml corrected.xml
+          # Merge the yes-based ilextra feed (i24news / kalkala10 / channel16),
+          # published from the Mac (IL IP), so il.xml.gz carries fresh forward
+          # EPG for i24 News + Kalkala 10 that epg.team lacks.
+          if curl -L --fail -o ilextra.xml.gz "https://raw.githubusercontent.com/rubi122/epg-mirror/ilextra/ilextra.xml.gz?t=$(date +%s)"; then
+            gunzip -f ilextra.xml.gz
+            if python3 merge_ilextra.py corrected.xml ilextra.xml merged.xml; then
+              mv merged.xml corrected.xml
+              echo "merged ilextra"
+            else
+              echo "ilextra merge failed - using base only"
+            fi
+            rm -f ilextra.xml
+          else
+            echo "ilextra fetch failed - using base only"
+          fi
+          gzip -9 -c corrected.xml > il.new.gz
+          if [ "$(stat -c%s il.new.gz)" -gt 1000000 ]; then mv il.new.gz il.xml.gz; else echo "il feed too small"; rm -f il.new.gz; fi
+          rm -f tvteam.xml corrected.xml
+
+      - name: Publish (single-commit history to keep repo small)
+        run: |
+          set -e
+          git config user.name "epg-bot"
+          git config user.email "actions@github.com"
+          git checkout --orphan fresh
+          git rm -rf --cached . >/dev/null 2>&1 || true
+          git add il.xml.gz transform.py humor2.py merge_ilextra.py .github/workflows/sync-epg.yml
+          git commit -m "auto: refresh il.xml.gz"
+          git branch -M fresh main
+          git push -f origin main
